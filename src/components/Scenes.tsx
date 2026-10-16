@@ -1,5 +1,5 @@
-import { Canvas } from '@react-three/fiber';
-import { Stars, useTexture } from '@react-three/drei';
+﻿import { Canvas } from '@react-three/fiber';
+import { RoundedBox, Stars, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -20,7 +20,7 @@ export function SpaceScene(){
  return <div className="scene-host"><Canvas dpr={[1,1.4]} camera={{position:[0,0,6.5],fov:40}} gl={{antialias:true,alpha:true,powerPreference:'low-power'}}><ambientLight intensity={0.32}/><directionalLight position={[-3,2,4]} intensity={3} color="#e6f1ff"/><pointLight position={[3,-1,-2]} intensity={1.5} color="#7161c7"/><Stars radius={90} depth={48} count={1800} factor={3} saturation={0.35} fade/><Suspense fallback={<mesh><sphereGeometry args={[1.65,24,24]}/><meshBasicMaterial color="#19375c"/></mesh>}><Planet/></Suspense></Canvas></div>;
 }
 function CardFace({back=false}:{back?:boolean}){
- const map=useMemo(()=>{const c=document.createElement('canvas');c.width=1200;c.height=700;const x=c.getContext('2d')!;x.fillStyle='#11131a';x.fillRect(0,0,1200,700);const g=x.createLinearGradient(0,0,1200,700);g.addColorStop(0,'rgba(255,255,255,.10)');g.addColorStop(1,'rgba(141,220,255,.07)');x.fillStyle=g;x.fillRect(0,0,1200,700);x.strokeStyle='rgba(221,227,237,.27)';x.lineWidth=3;x.strokeRect(38,38,1124,624);x.fillStyle='#dde3ed';if(!back){x.font='500 92px Arial';x.fillText('NP',90,245);x.fillStyle='#8ddcff';x.fillRect(90,290,56,3);x.fillStyle='#dde3ed';x.font='600 52px Arial';x.fillText('NEW PRAKASH',90,405);x.font='300 34px Arial';x.fillText('RADIO SERVICE',90,466);x.fillStyle='#9297a3';x.font='18px Arial';x.fillText('TECHNOLOGY THAT FEELS CLOSER',90,580)}else{x.font='600 38px Arial';x.fillText('A LITTLE MORE CONNECTED.',90,145);x.fillStyle='#c5c7ce';x.font='28px Arial';['Electronics · Smartphones · Televisions','Air conditioners · Air coolers','Accessories · Home appliances'].forEach((t,i)=>x.fillText(t,90,250+i*70));x.fillStyle='#8ddcff';x.font='24px Arial';x.fillText('TURANGA CIRCLE / IDAR, GUJARAT',90,590)}const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t},[back]);return <meshBasicMaterial map={map}/>;
+ const map=useMemo(()=>{const c=document.createElement('canvas');c.width=1200;c.height=700;const x=c.getContext('2d')!;x.fillStyle='#11131a';x.fillRect(0,0,1200,700);const g=x.createLinearGradient(0,0,1200,700);g.addColorStop(0,'rgba(255,255,255,.10)');g.addColorStop(1,'rgba(141,220,255,.07)');x.fillStyle=g;x.fillRect(0,0,1200,700);x.strokeStyle='rgba(221,227,237,.27)';x.lineWidth=3;x.strokeRect(38,38,1124,624);x.fillStyle='#dde3ed';if(!back){x.font='500 92px Arial';x.fillText('NP',90,245);x.fillStyle='#8ddcff';x.fillRect(90,290,56,3);x.fillStyle='#dde3ed';x.font='600 52px Arial';x.fillText('NEW PRAKASH',90,405);x.font='300 34px Arial';x.fillText('RADIO SERVICE',90,466);x.fillStyle='#9297a3';x.font='18px Arial';x.fillText('TECHNOLOGY THAT FEELS CLOSER',90,580)}else{x.font='600 38px Arial';x.fillText('A LITTLE MORE CONNECTED.',90,145);x.fillStyle='#c5c7ce';x.font='28px Arial';['Electronics · Smartphones · Televisions','Air conditioners · Air coolers','Accessories · Home appliances'].forEach((t,i)=>x.fillText(t,90,250+i*70));x.fillStyle='#8ddcff';x.font='24px Arial';x.fillText('TIRANGA CIRCLE / IDAR, GUJARAT',90,590)}const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t},[back]);return <meshBasicMaterial map={map}/>;
 }
 function CardRig(){
  const card=useRef<THREE.Group>(null);const invalidate=useThree(s=>s.invalidate);
@@ -36,6 +36,114 @@ const walkStops = [
   { title: 'Everyday comfort.', detail: 'Air conditioners · air coolers · appliances' },
   { title: 'A place to check out.', detail: 'Billing counter · end of the walk' },
 ];
+
+walkStops[0].detail = 'Entrance · the aisle opens ahead';
+walkStops[1].detail = 'Apple · Samsung · tablets · accessories';
+walkStops[2].detail = 'LED television wall · speakers on the left shelves';
+walkStops[3].detail = 'Air conditioners on the left · coolers on the floor';
+walkStops[4].detail = 'Billing counter · a welcome at the end';
+
+type PhoneBrand = 'APPLE' | 'SAMSUNG';
+
+function makePhoneScreen(brand: PhoneBrand) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d')!;
+  const gradient = ctx.createLinearGradient(30, 0, 225, 512);
+  if (brand === 'APPLE') {
+    gradient.addColorStop(0, '#cbe4f6');
+    gradient.addColorStop(.46, '#667fa5');
+    gradient.addColorStop(1, '#253047');
+  } else {
+    gradient.addColorStop(0, '#d5e9e8');
+    gradient.addColorStop(.48, '#668e9c');
+    gradient.addColorStop(1, '#1e3945');
+  }
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const glow = ctx.createRadialGradient(140, 195, 8, 140, 195, 150);
+  glow.addColorStop(0, brand === 'APPLE' ? '#f5d4ca99' : '#d2f3e799');
+  glow.addColorStop(1, '#ffffff00');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 45, 256, 310);
+  ctx.fillStyle = '#ffffffb8';
+  ctx.font = '20px Arial';
+  ctx.fillText('9:41', 22, 40);
+  ctx.beginPath();
+  ctx.roundRect(105, 15, brand === 'APPLE' ? 48 : 12, 8, 5);
+  ctx.fillStyle = '#161b20';
+  ctx.fill();
+  ctx.fillStyle = '#ffffffd9';
+  ctx.textAlign = 'center';
+  ctx.font = '15px Arial';
+  ctx.fillText(brand === 'APPLE' ? 'iPhone' : 'Galaxy', 128, 454);
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#ffffff40';
+  ctx.beginPath();
+  ctx.roundRect(71, 481, 114, 5, 3);
+  ctx.fill();
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  return texture;
+}
+
+function makeBrandMap() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 640;
+  canvas.height = 128;
+  const ctx = canvas.getContext('2d')!;
+  ctx.fillStyle = '#eceae5';
+  ctx.fillRect(0, 0, 640, 128);
+  ctx.strokeStyle = '#c9c3b7';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(3, 3, 634, 122);
+  ctx.fillStyle = '#25292d';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '500 36px Arial';
+  ctx.fillText('APPLE', 185, 65);
+  ctx.fillStyle = '#8b8a84';
+  ctx.fillRect(319, 38, 2, 52);
+  ctx.fillStyle = '#25292d';
+  ctx.font = '500 34px Arial';
+  ctx.fillText('SAMSUNG', 455, 65);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  return texture;
+}
+
+function makeShopSignMap() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d')!;
+  ctx.fillStyle = '#202328';
+  ctx.fillRect(0, 0, 1024, 256);
+  ctx.strokeStyle = '#b8b3a8';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(12, 12, 1000, 232);
+  ctx.fillStyle = '#dde3ed';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '500 74px Arial';
+  ctx.fillText('NP', 145, 119);
+  ctx.fillStyle = '#8ddcff';
+  ctx.fillRect(92, 190, 106, 3);
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#f3f1eb';
+  ctx.font = '500 60px Arial';
+  ctx.fillText('NEW PRAKASH', 258, 106);
+  ctx.fillStyle = '#c6c9ce';
+  ctx.font = '400 37px Arial';
+  ctx.fillText('RADIO SERVICE', 262, 164);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  return texture;
+}
 
 function makeTileMap(){
   const canvas=document.createElement('canvas');canvas.width=512;canvas.height=512;
@@ -85,6 +193,24 @@ function ShopShell({floorMap}:{floorMap:THREE.CanvasTexture}){
   </group>;
 }
 
+function ShelfSpeaker({position}:{position:[number,number,number]}){
+  const graphite = useMemo(() => new THREE.MeshStandardMaterial({color:'#242729',roughness:.4,metalness:.24}), []);
+  const cone = useMemo(() => new THREE.MeshStandardMaterial({color:'#525659',roughness:.58,metalness:.12}), []);
+  return <group position={position}>
+    <RoundedBox args={[.31,.38,.28]} radius={.025} smoothness={3} castShadow>
+      <meshStandardMaterial color="#292c2e" roughness={.43} metalness={.18}/>
+    </RoundedBox>
+    <mesh position={[.16,0,0]} rotation={[0,Math.PI/2,0]}><planeGeometry args={[.25,.35]}/><meshStandardMaterial color="#1d2022" roughness={.66}/></mesh>
+    {[.09,-.085].map((y,i)=><group key={i} position={[.166,y,0]} rotation={[0,Math.PI/2,0]}>
+      <mesh><torusGeometry args={[i===0?.047:.078,.009,8,24]}/><primitive object={graphite} attach="material"/></mesh>
+      <mesh position={[0,0,.004]}><circleGeometry args={[i===0?.039:.069,24]}/><primitive object={cone} attach="material"/></mesh>
+      <mesh position={[0,0,.009]}><circleGeometry args={[i===0?.011:.021,20]}/><meshStandardMaterial color="#181b1d" roughness={.5}/></mesh>
+    </group>)}
+    <mesh position={[.168,.15,.092]} rotation={[0,Math.PI/2,0]}><circleGeometry args={[.021,20]}/><meshStandardMaterial color="#17191b" roughness={.45}/></mesh>
+    <mesh position={[.166,-.175,0]} rotation={[0,Math.PI/2,0]}><planeGeometry args={[.2,.012]}/><meshStandardMaterial color="#8f918e" metalness={.42} roughness={.4}/></mesh>
+  </group>;
+}
+
 function WallShelves(){
   const shelfZ=[3.25,-3.45];
   return <group>
@@ -95,6 +221,7 @@ function WallShelves(){
         <mesh position={[-3.72,y+.08,z]}><boxGeometry args={[.045,.18,5.05]}/><meshStandardMaterial color="#d2cdc3" roughness={.75}/></mesh>
         {Array.from({length:7},(_,j)=>{
           const zz=z-1.98+j*.66;
+          if(zone===1&&i>0&&i<4&&j%2===1)return <ShelfSpeaker key={j} position={[-3.27,y+.2,zz]}/>;
           if(zone===0&&i>0&&i<4)return <group key={j} position={[-3.27,y+.17,zz]}>
             <mesh castShadow><boxGeometry args={[.05,.26,.16]}/><meshStandardMaterial color={['#20242a','#29343b','#8a9195','#363239'][j%4]} roughness={.3} metalness={.26}/></mesh>
             <mesh position={[.027,0,0]} rotation={[0,Math.PI/2,0]}><planeGeometry args={[.13,.21]}/><meshStandardMaterial color="#111820" emissive="#455c68" emissiveIntensity={.12} roughness={.18}/></mesh>
@@ -128,23 +255,35 @@ function TelevisionWall({screenMap}:{screenMap:THREE.CanvasTexture}){
   </group>;
 }
 
-function PhoneOnStand({x,z,y=1.01}:{x:number;z:number;y?:number}){
+function PhoneOnStand({x,z,y=1.01,brand,screenMap}:{x:number;z:number;y?:number;brand:PhoneBrand;screenMap:THREE.CanvasTexture}){
+  const frameColor = brand === 'APPLE' ? '#62666a' : '#b8bec1';
   return <group position={[x,y,z]} rotation={[-.06,0,0]}>
-    <mesh position={[0,.12,0]} castShadow><boxGeometry args={[.12,.24,.035]}/><meshStandardMaterial color="#32373b" metalness={.52} roughness={.26}/></mesh>
-    <mesh position={[0,.12,.019]}><planeGeometry args={[.103,.213]}/><meshStandardMaterial color="#171d21" emissive="#51646c" emissiveIntensity={.13} roughness={.18}/></mesh>
+    <RoundedBox args={[.12,.25,.035]} radius={.018} smoothness={3} position={[0,.12,0]} castShadow>
+      <meshStandardMaterial color={frameColor} metalness={.55} roughness={.24}/>
+    </RoundedBox>
+    <RoundedBox args={[.105,.228,.006]} radius={.014} smoothness={3} position={[0,.12,.021]}>
+      <meshStandardMaterial map={screenMap} emissive="#ffffff" emissiveMap={screenMap} emissiveIntensity={.2} roughness={.2} metalness={.02}/>
+    </RoundedBox>
+    <RoundedBox args={[.047,.06,.008]} radius={.012} smoothness={3} position={[-.032,.203,-.022]}>
+      <meshStandardMaterial color={brand === 'APPLE' ? '#46494c' : '#c3c6c8'} metalness={.42} roughness={.28}/>
+    </RoundedBox>
+    {(brand === 'APPLE' ? [[-.042,.219],[-.022,.219],[-.042,.187]] : [[-.032,.22],[-.032,.2],[-.032,.18]]).map(([cx,cy],i)=><mesh key={i} position={[cx,cy,-.027]} rotation={[Math.PI,0,0]}>
+      <torusGeometry args={[.007,.002,6,12]}/><meshStandardMaterial color="#16191c" metalness={.32} roughness={.22}/>
+    </mesh>)}
     <mesh position={[0,-.02,-.035]} rotation={[-.18,0,0]}><boxGeometry args={[.16,.025,.11]}/><meshStandardMaterial color="#a9a8a2" metalness={.48} roughness={.4}/></mesh>
   </group>;
 }
 
-function RetailIsland({x,z,index}:{x:number;z:number;index:number}){
+function RetailIsland({x,z,index,phoneScreens,brandMap}:{x:number;z:number;index:number;phoneScreens:Record<PhoneBrand,THREE.CanvasTexture>;brandMap:THREE.CanvasTexture}){
   const colors=['#ded8ca','#d5d0c5','#e1ddd3'];
   return <group position={[x,0,z]}>
     <mesh position={[0,.52,0]} castShadow receiveShadow><boxGeometry args={[1.14,.55,1.7]}/><meshStandardMaterial color="#f2f1ed" roughness={.52}/></mesh>
     <mesh position={[0,.83,0]} castShadow><boxGeometry args={[1.23,.09,1.8]}/><meshStandardMaterial color={colors[index%3]} roughness={.4} metalness={.08}/></mesh>
     {[-.47,.47].flatMap((sx)=>([-.72,.72].map((sz,j)=><mesh key={`${sx}-${sz}`} position={[sx,.32,sz]} rotation={[0,0,sx*.16]} castShadow><boxGeometry args={[.045,.62,.045]}/><meshStandardMaterial color="#788188" metalness={.7} roughness={.3}/></mesh>)))}
-    {[-.36,0,.36].map((dx,i)=><PhoneOnStand key={i} x={dx} z={-.31} y={.91}/>)}
+    {[-.36,0,.36].map((dx,i)=>{const brand:PhoneBrand=i===1?'SAMSUNG':'APPLE';return <PhoneOnStand key={i} x={dx} z={-.31} y={.91} brand={brand} screenMap={phoneScreens[brand]}/>})}
     <mesh position={[0,.94,.33]} rotation={[-Math.PI/2,0,0]} castShadow><boxGeometry args={[.36,.48,.028]}/><meshStandardMaterial color="#20272c" metalness={.35} roughness={.25}/></mesh>
     <mesh position={[0,.956,.33]} rotation={[-Math.PI/2,0,0]}><planeGeometry args={[.33,.445]}/><meshStandardMaterial color={index%2?'#778c91':'#b8aaa0'} emissive={index%2?'#50666c':'#6f6259'} emissiveIntensity={.16}/></mesh>
+    <mesh position={[0,.52,.852]}><planeGeometry args={[1.02,.2]}/><meshBasicMaterial map={brandMap}/></mesh>
     <mesh position={[0,.3,-.77]}><boxGeometry args={[.92,.035,.035]}/><meshStandardMaterial color="#a9a39a" metalness={.5}/></mesh>
   </group>;
 }
@@ -152,10 +291,10 @@ function RetailIsland({x,z,index}:{x:number;z:number;index:number}){
 function CoolingDisplay(){
   const coolerPositions=[[-3.05,-5.85],[2.95,-5.45]] as const;
   return <group>
-    {[-3.55,3.55].map((x,i)=><group key={`ac-${i}`} position={[x,2.98,-6.55]}>
+    {[-7.05,-8.9].map((z,i)=><group key={`ac-${i}`} position={[-3.55,2.95,z]}>
       <mesh castShadow><boxGeometry args={[.42,.3,1.55]}/><meshStandardMaterial color="#faf9f5" roughness={.38}/></mesh>
-      <mesh position={[i===0?.218:-.218,-.105,0]} rotation={[0,i===0?Math.PI/2:-Math.PI/2,0]}><planeGeometry args={[1.3,.045]}/><meshStandardMaterial color="#a8afb0" roughness={.5}/></mesh>
-      {Array.from({length:9},(_,j)=><mesh key={j} position={[i===0?.221:-.221,-.128,-.56+j*.14]}><boxGeometry args={[.025,.012,.075]}/><meshStandardMaterial color="#858d8e" roughness={.4}/></mesh>)}
+      <mesh position={[.218,-.105,0]} rotation={[0,Math.PI/2,0]}><planeGeometry args={[1.3,.045]}/><meshStandardMaterial color="#a8afb0" roughness={.5}/></mesh>
+      {Array.from({length:9},(_,j)=><mesh key={j} position={[.221,-.128,-.56+j*.14]}><boxGeometry args={[.025,.012,.075]}/><meshStandardMaterial color="#858d8e" roughness={.4}/></mesh>)}
     </group>)}
     {coolerPositions.map(([x,z],i)=><group key={`cooler-${i}`} position={[x,0,z]}>
       <mesh position={[0,.7,0]} castShadow><boxGeometry args={[.7,1.35,.5]}/><meshStandardMaterial color="#f0f0ec" roughness={.42}/></mesh>
@@ -164,6 +303,39 @@ function CoolingDisplay(){
       <mesh position={[0,.55,.286]}><torusGeometry args={[.16,.012,8,32]}/><meshStandardMaterial color="#87918e" metalness={.48} roughness={.32}/></mesh>
       <mesh position={[0,.04,0]}><boxGeometry args={[.62,.09,.46]}/><meshStandardMaterial color="#cbc9c1" roughness={.58}/></mesh>
     </group>)}
+  </group>;
+}
+
+function ShopSign({texture}:{texture:THREE.CanvasTexture}){
+  return <group position={[0,2.72,-10.43]}>
+    <RoundedBox args={[3.8,.98,.12]} radius={.045} smoothness={4} castShadow>
+      <meshStandardMaterial color="#292c30" roughness={.52} metalness={.16}/>
+    </RoundedBox>
+    <mesh position={[0,0,.066]}><planeGeometry args={[3.55,.78]}/><meshBasicMaterial map={texture}/></mesh>
+    <mesh position={[-1.71,-.38,.07]}><boxGeometry args={[.12,.025,.025]}/><meshStandardMaterial color="#b7ae9f" metalness={.55} roughness={.32}/></mesh>
+    <mesh position={[1.71,-.38,.07]}><boxGeometry args={[.12,.025,.025]}/><meshStandardMaterial color="#b7ae9f" metalness={.55} roughness={.32}/></mesh>
+  </group>;
+}
+
+function StoreAttendant(){
+  const skin = '#b98361';
+  const shirt = '#647681';
+  return <group position={[0,0,-9.62]}>
+    <mesh position={[0,1.3,0]} castShadow><capsuleGeometry args={[.22,.48,6,12]}/><meshStandardMaterial color={shirt} roughness={.82}/></mesh>
+    <mesh position={[0,1.63,0]}><cylinderGeometry args={[.065,.07,.13,12]}/><meshStandardMaterial color={skin} roughness={.72}/></mesh>
+    <mesh position={[0,1.84,0]} scale={[.145,.18,.137]} castShadow><sphereGeometry args={[1,20,16]}/><meshStandardMaterial color={skin} roughness={.7}/></mesh>
+    <mesh position={[0,1.945,-.018]} scale={[.15,.093,.14]}><sphereGeometry args={[1,18,12,0,Math.PI*2,0,Math.PI*.58]}/><meshStandardMaterial color="#262522" roughness={.82}/></mesh>
+    {[-1,1].map((side)=><group key={side}>
+      <mesh position={[side*.145,1.84,0]} scale={[.035,.055,.035]}><sphereGeometry args={[1,12,10]}/><meshStandardMaterial color={skin} roughness={.72}/></mesh>
+      <mesh position={[side*.052,1.858,.126]} scale={[.014,.017,.009]}><sphereGeometry args={[1,12,10]}/><meshStandardMaterial color="#24211f" roughness={.45}/></mesh>
+      <mesh position={[side*.22,1.38,.02]} rotation={[0,0,-side*.32]}><capsuleGeometry args={[.07,.29,5,10]}/><meshStandardMaterial color={shirt} roughness={.82}/></mesh>
+      <mesh position={[side*.4,1.15,.36]} rotation={[0,0,side*.12]}><capsuleGeometry args={[.055,.3,5,10]}/><meshStandardMaterial color={shirt} roughness={.82}/></mesh>
+      <mesh position={[side*.42,1.095,.45]} scale={[.065,.045,.09]}><sphereGeometry args={[1,12,10]}/><meshStandardMaterial color={skin} roughness={.72}/></mesh>
+    </group>)}
+    <mesh position={[0,1.805,.141]} scale={[.023,.028,.024]}><sphereGeometry args={[1,12,10]}/><meshStandardMaterial color={skin} roughness={.72}/></mesh>
+    <mesh position={[0,1.75,.136]}><boxGeometry args={[.045,.006,.007]}/><meshStandardMaterial color="#58382f" roughness={.8}/></mesh>
+    <mesh position={[0,1.3,.224]}><boxGeometry args={[.018,.34,.012]}/><meshStandardMaterial color="#46535a" roughness={.8}/></mesh>
+    {[1.4,1.3,1.2].map((y,i)=><mesh key={i} position={[0,y,.234]}><sphereGeometry args={[.012,8,8]}/><meshStandardMaterial color="#c4b69e" metalness={.35} roughness={.48}/></mesh>)}
   </group>;
 }
 
@@ -183,13 +355,17 @@ function BillingCounter(){
 }
 
 function ShopContents(){
-  const floorMap=useMemo(makeTileMap,[]);const screenMap=useMemo(makeScreenMap,[]);
-  useEffect(()=>()=>{floorMap.dispose();screenMap.dispose()},[floorMap,screenMap]);
+  const floorMap=useMemo(makeTileMap,[]);
+  const screenMap=useMemo(makeScreenMap,[]);
+  const phoneScreens=useMemo(()=>({APPLE:makePhoneScreen('APPLE'),SAMSUNG:makePhoneScreen('SAMSUNG')}),[]);
+  const brandMap=useMemo(makeBrandMap,[]);
+  const signMap=useMemo(makeShopSignMap,[]);
+  useEffect(()=>()=>{floorMap.dispose();screenMap.dispose();phoneScreens.APPLE.dispose();phoneScreens.SAMSUNG.dispose();brandMap.dispose();signMap.dispose()},[floorMap,screenMap,phoneScreens,brandMap,signMap]);
   return <>
     <ShopShell floorMap={floorMap}/><WallShelves/><TelevisionWall screenMap={screenMap}/>
-    <RetailIsland x={-1.45} z={4.25} index={0}/><RetailIsland x={1.45} z={1} index={1}/>
-    <RetailIsland x={-1.45} z={-2.25} index={2}/><RetailIsland x={1.45} z={-5.15} index={0}/>
-    <CoolingDisplay/><BillingCounter/>
+    <RetailIsland x={-1.45} z={4.25} index={0} phoneScreens={phoneScreens} brandMap={brandMap}/><RetailIsland x={1.45} z={1} index={1} phoneScreens={phoneScreens} brandMap={brandMap}/>
+    <RetailIsland x={-1.45} z={-2.25} index={2} phoneScreens={phoneScreens} brandMap={brandMap}/><RetailIsland x={1.45} z={-5.15} index={0} phoneScreens={phoneScreens} brandMap={brandMap}/>
+    <CoolingDisplay/><BillingCounter/><ShopSign texture={signMap}/><StoreAttendant/>
   </>;
 }
 
